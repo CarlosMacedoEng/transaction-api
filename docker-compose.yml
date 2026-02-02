@@ -1,0 +1,41 @@
+services:
+  # Serviço da Aplicação (Java)
+  app:
+    build: .
+    container_name: transaction-api
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=pismo_db
+      - DB_USER=pismo_user
+      - DB_PASSWORD=pismo_pass
+    depends_on:
+      - db
+    networks:
+      - pismo-network
+    restart: on-failure
+
+  # Serviço do Banco de Dados (Postgres)
+  db:
+    image: postgres:16-alpine
+    container_name: transaction-db
+    environment:
+      - POSTGRES_DB=pismo_db
+      - POSTGRES_USER=pismo_user
+      - POSTGRES_PASSWORD=pismo_pass
+    ports:
+      - "5432:5432" # Exposto para você conectar via DBeaver/PgAdmin se quiser
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persistência de dados
+    networks:
+      - pismo-network
+
+# Definição de volumes e redes
+volumes:
+  postgres_data:
+
+networks:
+  pismo-network:
+    driver: bridge
