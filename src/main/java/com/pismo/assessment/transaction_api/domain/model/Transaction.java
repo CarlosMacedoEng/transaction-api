@@ -11,22 +11,33 @@ public class Transaction {
     private final Long accountId;
     private final OperationType operationType;
     private final BigDecimal amount;
+    private final BigDecimal balance;
     private final LocalDateTime eventDate;
 
     // Constructor 1: CREATION (Used by CreateTransactionUseCase/Service)
     public Transaction(Long accountId, OperationType operationType, BigDecimal amount) {
         this.accountId = accountId;
         this.operationType = operationType;
-        this.amount = applySignRule(operationType, amount); // <--- AQUI A MÁGICA
+        this.amount = applySignRule(operationType, amount);
+        this.balance = this.amount;
         this.eventDate = LocalDateTime.now();
     }
 
-    // Constructor 2: RECONSTRUCTION (Used ONLY by the PersistenceAdapter when loading from the bank)
-    public Transaction(Long id, Long accountId, OperationType operationType, BigDecimal amount, LocalDateTime eventDate) {
+    public Transaction(Long accountId, OperationType operationType, BigDecimal amount, BigDecimal balance) {
+        this.accountId = accountId;
+        this.operationType = operationType;
+        this.amount = applySignRule(operationType, amount);
+        this.balance = balance;
+        this.eventDate = LocalDateTime.now();
+    }
+
+    // Constructor 3: RECONSTRUCTION (Used ONLY by the PersistenceAdapter when loading from the bank)
+    public Transaction(Long id, Long accountId, OperationType operationType, BigDecimal amount, BigDecimal balance, LocalDateTime eventDate) {
         this.id = id;
         this.accountId = accountId;
         this.operationType = operationType;
         this.amount = amount;
+        this.balance = balance; 
         this.eventDate = eventDate;
     }
 

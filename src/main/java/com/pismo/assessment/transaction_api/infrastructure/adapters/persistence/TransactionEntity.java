@@ -36,6 +36,9 @@ public class TransactionEntity {
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
+    @Column(name = "balance", nullable = false)
+    private BigDecimal balance;
+
     @Column(name = "event_date", nullable = false)
     private LocalDateTime eventDate;
     
